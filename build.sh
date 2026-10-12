@@ -7,8 +7,8 @@ src=index.html
 out=docs/index.html
 mkdir -p docs
 
-# Başlık, font ve stil kısmı <head>'e; <div class="wrap"> ve sonrası <body>'ye
-split=$(grep -n '^<div class="wrap">' "$src" | head -1 | cut -d: -f1)
+# Başlık, font ve stil kısmı <head>'e; ilk <div ile başlayan satır ve sonrası <body>'ye
+split=$(grep -n '^<div class=' "$src" | head -1 | cut -d: -f1)
 if [ -z "$split" ]; then echo "Bölme noktası bulunamadı" >&2; exit 1; fi
 
 {
@@ -17,7 +17,7 @@ if [ -z "$split" ]; then echo "Bölme noktası bulunamadı" >&2; exit 1; fi
   echo '<head>'
   echo '<meta charset="utf-8">'
   echo '<meta name="description" content="TÜBİTAK 4006-A Bilim Fuarı projesi: oyuncunun hamle desenlerini okuyup ona karşı oynayan taş kağıt makas yapay zekâsı. Umut Dalga, Ruhi Emre Karaman · Danışman: Mehmet Akbaş">'
-  echo '<meta name="theme-color" content="#0F1525">'
+  echo '<meta name="theme-color" content="#08061A">'
   echo '<meta name="mobile-web-app-capable" content="yes">'
   echo '<meta name="apple-mobile-web-app-capable" content="yes">'
   echo '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230F1525%22/%3E%3Ctext x=%2250%22 y=%2266%22 font-size=%2252%22 text-anchor=%22middle%22%3E%E2%9C%8A%3C/text%3E%3C/svg%3E">'

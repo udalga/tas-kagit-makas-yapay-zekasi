@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="description" content="TÜBİTAK 4006-A Bilim Fuarı projesi: oyuncunun hamle desenlerini okuyup ona karşı oynayan taş kağıt makas yapay zekâsı. Umut Dalga, Ruhi Emre Karaman · Danışman: Mehmet Akbaş">
-<meta name="theme-color" content="#0F1525">
+<meta name="theme-color" content="#08061A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230F1525%22/%3E%3Ctext x=%2250%22 y=%2266%22 font-size=%2252%22 text-anchor=%22middle%22%3E%E2%9C%8A%3C/text%3E%3C/svg%3E">
@@ -15,29 +15,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: üstte tam genişlikte oyun sahnesi (köşelerde skor ve ayarlar, ortada düello, altta dev butonlar); altında skor tablosu, 2×2 analiz panelleri ve bot laboratuvarı. Tam ekranda yalnızca sahne kalır. */
+/* Görünüm: Mehmet Akbaş modunun dili. Koyu mor-lacivert zemin, arkada çok yavaş dönen ışık huzmeleri;
+   oyuncu altın, yapay zekâ camgöbeği, vurgu pembe; önemli yerlerde gökkuşağı çerçeve ve parlama.
+   Bilinçli olarak tek (koyu) tema: neon parlamalar koyu zeminde anlam kazanıyor. */
 :root{
-  --bg:#EDF0F5; --surface:#FFFFFF; --sunk:#E5E9F0; --ink:#0F1525; --muted:#5A6379; --line:#D9DEE8;
-  --ai:#3A4DE8; --ai-soft:#E4E8FE; --you:#E2541B; --you-soft:#FDE8DD; --tie:#8F98AB; --danger:#D92D20; --chip-ink:#FFFFFF;
-  --glow-you:rgba(226,84,27,.13); --glow-ai:rgba(58,77,232,.13);
-  --shadow:0 1px 0 rgba(15,21,37,.04),0 14px 34px -18px rgba(15,21,37,.28);
+  --bg:#08061A; --bg-2:#130C33;
+  --surface:rgba(22,16,54,.86); --surface-solid:#17113C; --sunk:#0E0A28; --raise:#241C55;
+  --ink:#F5F2FF; --muted:#A39CC9; --line:rgba(255,255,255,.11);
+  --you:#FFC23D; --you-soft:rgba(255,194,61,.14);
+  --ai:#4FD8FF; --ai-soft:rgba(79,216,255,.14);
+  --pink:#E24BD6; --tie:#8C84B8; --danger:#FF4D4D; --chip-ink:#0B0820;
+  --glow-you:rgba(255,194,61,.16); --glow-ai:rgba(79,216,255,.14);
+  --rainbow:#FF4D4D,#FFC23D,#2BD47D,#3A9BFF,#E24BD6,#FF4D4D;
+  --shadow:inset 0 1px 0 rgba(255,255,255,.05),0 22px 50px -26px rgba(0,0,0,.9);
   --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#090D16; --surface:#111726; --sunk:#1A2135; --ink:#E9EDF6; --muted:#8E97AD; --line:#242C42;
-    --ai:#8C9BFF; --ai-soft:#1F2752; --you:#FF8A4C; --you-soft:#3A2216; --tie:#69728C; --danger:#FF5A4E; --chip-ink:#090D16;
-    --glow-you:rgba(255,138,76,.11); --glow-ai:rgba(140,155,255,.13);
-    --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 42px -22px rgba(0,0,0,.8);
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#090D16; --surface:#111726; --sunk:#1A2135; --ink:#E9EDF6; --muted:#8E97AD; --line:#242C42;
-  --ai:#8C9BFF; --ai-soft:#1F2752; --you:#FF8A4C; --you-soft:#3A2216; --tie:#69728C; --danger:#FF5A4E; --chip-ink:#090D16;
-  --glow-you:rgba(255,138,76,.11); --glow-ai:rgba(140,155,255,.13);
-  --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 42px -22px rgba(0,0,0,.8);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -597,6 +590,115 @@ td.num.k-ai{font-weight:500;font-size:14.5px}
 .hype.boom .ch{animation:hypeBoom .7s cubic-bezier(.2,.9,.3,1.5),hypeFlow 3s linear infinite;animation-delay:calc(var(--i) * 30ms),calc(var(--i) * -140ms)}
 @keyframes hypeBoom{0%{transform:scale(1)}35%{transform:translateY(-.6em) scale(1.6) rotate(-14deg)}100%{transform:none}}
 
+/* ---------- Neon sahne görünümü (Mehmet Akbaş modunun dili, efekt yağmuru olmadan) ---------- */
+html{background:var(--bg)}
+::selection{background:rgba(226,75,214,.45);color:#fff}
+/* Sayfanın arkası: renkli ışık lekeleri ve çok yavaş dönen huzmeler (yalnızca döndürme: yeniden boyama yok) */
+.bgfx{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+  background:radial-gradient(70% 55% at 50% -12%,rgba(226,75,214,.22),transparent 70%),radial-gradient(55% 45% at 0% 105%,rgba(79,216,255,.13),transparent 70%),radial-gradient(55% 45% at 100% 105%,rgba(255,194,61,.13),transparent 70%)}
+.bgfx i{position:absolute;left:50%;top:40%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;will-change:transform;
+  background:repeating-conic-gradient(from 0deg,rgba(255,194,61,.075) 0 6deg,transparent 6deg 20deg,rgba(226,75,214,.065) 20deg 26deg,transparent 26deg 40deg);
+  -webkit-mask:radial-gradient(closest-side,#000 20%,transparent 100%);mask:radial-gradient(closest-side,#000 20%,transparent 100%);
+  animation:beams 180s linear infinite}
+/* Marka */
+.logo{position:relative;isolation:isolate;background:transparent;color:var(--you);text-shadow:0 0 10px rgba(255,194,61,.75)}
+.logo::before{content:"";position:absolute;inset:-2px;border-radius:16px;z-index:-1;background:conic-gradient(from 210deg,var(--rainbow));box-shadow:0 0 22px -4px rgba(226,75,214,.7)}
+.logo::after{content:"";position:absolute;inset:0;border-radius:14px;z-index:-1;background:var(--bg-2)}
+.brand h1{color:var(--ink)}
+.brand h1 span{background:linear-gradient(90deg,var(--rainbow));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 .14em rgba(255,194,61,.5))}
+.brand .program{text-shadow:0 0 12px rgba(255,194,61,.6)}
+/* Butonlar */
+.btn,.icon-btn{background:rgba(255,255,255,.045);border-color:var(--line);color:var(--ink)}
+.btn:hover,.icon-btn:hover{border-color:var(--you);box-shadow:0 0 18px -6px var(--you)}
+.btn.armed{border-color:var(--danger);color:var(--danger);background:rgba(255,77,77,.12)}
+kbd{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.18)}
+.cta,.start{background:linear-gradient(100deg,#FFC23D,#FF8A3D 45%,#E24BD6);color:#170A26}
+.cta{box-shadow:0 12px 34px -12px rgba(226,75,214,.85),inset 0 1px 0 rgba(255,255,255,.35)}
+.start{box-shadow:0 0 0 7px rgba(255,255,255,.05),0 0 44px -6px rgba(255,194,61,.65)}
+.focus .center .start{box-shadow:0 0 0 6px rgba(8,6,26,.8),0 0 44px -6px rgba(255,194,61,.65)}
+.cta kbd,.start kbd{background:transparent}
+/* Sahne: ince gökkuşağı çerçeve, yarı saydam yüzey; tam ekranda arkadaki huzmeler görünür */
+.stage{border:1px solid transparent;
+  background:linear-gradient(rgba(17,12,44,.88),rgba(17,12,44,.88)) padding-box,linear-gradient(125deg,rgba(255,194,61,.6),rgba(226,75,214,.4) 35%,rgba(79,216,255,.5) 70%,rgba(43,212,125,.4)) border-box;
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.95),0 0 80px -40px rgba(226,75,214,.45)}
+.focus .stage{background:rgba(8,6,26,.5);box-shadow:none}
+.focus .wrap > :not(.stage){visibility:hidden}
+.pill{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.pill b{color:var(--ai);text-shadow:0 0 10px rgba(79,216,255,.55)}
+.pill.name{background:var(--you-soft);color:var(--you);box-shadow:inset 0 0 0 1px rgba(255,194,61,.35)}
+.sc b{text-shadow:0 0 24px currentColor}
+.colon i{color:var(--pink);text-shadow:0 0 12px rgba(226,75,214,.7)}
+/* Eller: yapay zekânın etrafında dönen gökkuşağı halka (yalnızca döndürme) */
+.orb{isolation:isolate;--rw:6px;text-shadow:0 0 28px rgba(255,255,255,.25)}
+.you .orb{background:radial-gradient(circle at 50% 38%,#33250f,#140e06 72%);box-shadow:0 0 0 2px rgba(255,194,61,.45),0 0 36px -8px rgba(255,194,61,.55)}
+.ai .orb{background:radial-gradient(circle at 50% 38%,#10283d,#070d1c 72%);box-shadow:0 0 44px -8px rgba(226,75,214,.6)}
+.ai .orb::before{content:"";position:absolute;inset:calc(var(--rw) * -1);border-radius:50%;z-index:-1;pointer-events:none;
+  background:conic-gradient(from 0deg,var(--rainbow));
+  -webkit-mask:radial-gradient(closest-side,transparent calc(100% - var(--rw)),#000 calc(100% - var(--rw) + 1px));
+  mask:radial-gradient(closest-side,transparent calc(100% - var(--rw)),#000 calc(100% - var(--rw) + 1px));
+  animation:ringSpin 6s linear infinite}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+.orb.empty{background:radial-gradient(circle at 50% 38%,#1d1745,#0c0924 72%);color:var(--muted)}
+.you .orb.won{box-shadow:0 0 0 4px var(--you),0 0 50px 6px rgba(255,194,61,.55)}
+.ai .orb.won{box-shadow:0 0 0 4px var(--ai),0 0 50px 6px rgba(79,216,255,.5)}
+.focus .ai .orb{--rw:12px}
+.focus .ai .orb.won{box-shadow:0 0 0 6px var(--ai),0 0 90px 12px rgba(79,216,255,.5)}
+/* Sayaç */
+.ring .trk{stroke:rgba(255,255,255,.08)}
+.ring .prg{filter:drop-shadow(0 0 6px rgba(255,194,61,.85))}
+.ring .num{text-shadow:0 0 22px rgba(255,194,61,.65)}
+.ring.low .num{text-shadow:0 0 22px rgba(255,77,77,.8)}
+.ring.low .prg{filter:drop-shadow(0 0 6px rgba(255,77,77,.9))}
+/* Sonuç */
+.result{color:var(--ink)}
+.result.r-ai{text-shadow:0 0 22px rgba(79,216,255,.55)}
+.result.r-you{text-shadow:0 0 22px rgba(255,194,61,.55)}
+.verdict,.verdict.r-ai,.verdict.r-you{rotate:-4deg;border:2px solid var(--tie);color:var(--ink);
+  background:repeating-linear-gradient(-45deg,rgba(0,0,0,.6) 0 7px,rgba(46,36,92,.6) 7px 14px)}
+.verdict.r-ai{border-color:var(--ai);color:var(--ai);box-shadow:0 0 20px -4px var(--ai)}
+.verdict.r-you{border-color:var(--you);color:var(--you);box-shadow:0 0 20px -4px var(--you)}
+/* Dev butonlar: her hamlenin kendi neon rengi; seçilen oyuncunun altını */
+.bm[data-m="0"]{--mv:#FF4D4D} .bm[data-m="1"]{--mv:#3A9BFF} .bm[data-m="2"]{--mv:#2BD47D}
+.bm{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015));border-color:rgba(255,255,255,.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 20px 44px -24px rgba(0,0,0,.95)}
+.bm::before{content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:var(--mv);box-shadow:0 0 16px 1px var(--mv);opacity:.85}
+.bm .ic{filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
+.bm kbd{color:var(--mv);border-color:color-mix(in srgb,var(--mv) 45%,transparent)}
+.stage[data-phase="turn"] .bm{border-color:color-mix(in srgb,var(--mv) 45%,rgba(255,255,255,.1))}
+.bm:hover:not(:disabled){border-color:var(--mv);box-shadow:0 0 0 1px var(--mv),0 0 40px -10px var(--mv),0 20px 44px -24px rgba(0,0,0,.95)}
+.bm:active:not(:disabled),.bm.flash,.bm.picked:disabled{border-color:var(--you);background:var(--you-soft);box-shadow:0 0 0 1px var(--you),0 0 44px -8px var(--you)}
+.c-ai{box-shadow:0 0 10px -2px var(--ai)} .c-you{box-shadow:0 0 10px -2px var(--you)}
+/* Paneller ve başlıklar */
+.panel,.credits{border:1px solid transparent;
+  background:linear-gradient(rgba(17,12,44,.86),rgba(17,12,44,.86)) padding-box,linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.04) 45%,rgba(226,75,214,.28)) border-box;
+  box-shadow:0 26px 60px -36px rgba(0,0,0,.95)}
+h2{color:var(--you);font-size:12.5px;text-transform:uppercase;letter-spacing:.14em;text-shadow:0 0 14px rgba(255,194,61,.5)}
+h2 small{color:var(--ai);text-transform:none;letter-spacing:.02em;text-shadow:none}
+.k-ai{text-shadow:0 0 16px rgba(79,216,255,.5)} .k-you{text-shadow:0 0 16px rgba(255,194,61,.5)}
+.track,.leaders .bar,.meter-bar{background:rgba(255,255,255,.07)}
+.track i{background:linear-gradient(90deg,#FF8A3D,var(--you));box-shadow:0 0 10px -2px var(--you)}
+.track i.ai,.leaders .bar i{background:linear-gradient(90deg,#3A9BFF,var(--ai));box-shadow:0 0 10px -2px var(--ai)}
+.track b{background:rgba(255,255,255,.5)}
+.meter-bar i{background:linear-gradient(90deg,var(--ai),var(--pink),var(--you))}
+.insights .tag{color:var(--pink)}
+.board-table tr.first td.rank{color:var(--you);text-shadow:0 0 12px rgba(255,194,61,.7)}
+.board-table tr.first td.rank::after{content:" 👑";font-size:.85em}
+.ctrl td{background:rgba(255,255,255,.035)}
+.seg{background:rgba(255,255,255,.06)}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--you);color:#170A26;box-shadow:0 0 16px -3px var(--you)}
+.settings{background:var(--surface-solid)}
+.stepper{background:rgba(255,255,255,.06)}
+.stepper button{background:var(--raise);color:var(--ink)}
+/* Giriş ve özet kartı: gökkuşağı çerçeve, gökkuşağı başlık */
+.overlay{background:rgba(8,6,26,.82)}
+.ov-card{border:2px solid transparent;background:linear-gradient(var(--surface-solid),var(--surface-solid)) padding-box,conic-gradient(from 210deg,var(--rainbow)) border-box;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.95),0 0 70px -24px rgba(226,75,214,.6)}
+.ov-title{text-transform:none;letter-spacing:-.01em;text-shadow:none;background:linear-gradient(90deg,var(--rainbow));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 .1em rgba(255,194,61,.45))}
+.eyebrow{color:var(--you);text-shadow:0 0 12px rgba(255,194,61,.55)}
+#nameInput{background:var(--sunk);border-color:rgba(255,255,255,.14)}
+#nameInput:focus{border-color:var(--you);box-shadow:0 0 0 3px rgba(255,194,61,.18),0 0 28px -8px var(--you)}
+.sum-score div{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+
 /* ---------- Mobil ve dokunmatik ---------- */
 .bm,.start,.cta,.btn,.icon-btn,.seg button,.stepper button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .bm,.start,.cta{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -607,7 +709,7 @@ td.num.k-ai{font-weight:500;font-size:14.5px}
 }
 /* Dokunmatik ekranda takılı kalan hover efektlerini ve klavye ipuçlarını kapat */
 @media (hover:none){
-  .bm:hover:not(:disabled){transform:none;border-color:color-mix(in srgb,var(--you) 35%,var(--line))}
+  .bm:hover:not(:disabled){transform:none;border-color:color-mix(in srgb,var(--mv) 45%,rgba(255,255,255,.1));box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 20px 44px -24px rgba(0,0,0,.95)}
   .bm:hover:not(:disabled) .ic{transform:none}
   .start:hover,.cta:hover{transform:none}
   .focus .center .start:hover{transform:translateX(-50%)}
@@ -639,6 +741,7 @@ footer{font-size:12.5px;color:var(--muted);max-width:75ch}
 
 </head>
 <body>
+<div class="bgfx" aria-hidden="true"><i></i></div>
 <div class="wrap">
   <header class="topbar">
     <div class="brand">
