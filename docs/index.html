@@ -2018,7 +2018,7 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const dense = n => Math.round(n * (innerWidth < 700 ? 0.6 : 1)); // telefonda daha az yağan nesne
 const NEON = ['#FF4D4D', '#FFC23D', '#2BD47D', '#3A9BFF', '#E24BD6', '#7CF7FF'];
 
-// --- Ses: fanfar, yükselen kombo sesi, ritim makinesi, Türkçe sunucu ---
+// --- Ses: fanfar, yükselen kombo sesi, ritim makinesi ---
 function fanfare(semi = 0) {
   const k = Math.pow(2, semi / 12);
   for (let i = 0; i < 14; i++) tone(i % 2 ? 130 : 110, 0.05, { type: 'square', vol: 0.05, at: i * 0.045 });
@@ -2069,19 +2069,6 @@ function beatTick() {
     beat.next += 60 / beat.bpm / 4;
     beat.step = (beat.step + 1) % 16;
   }
-}
-// Bilgisayarda Türkçe ses varsa seviye adlarını sesli okur; yoksa sessiz kalır
-let trVoice = null;
-function pickVoice() { try { trVoice = speechSynthesis.getVoices().find(v => /^tr([-_]|$)/i.test(v.lang)) || null; } catch (e) {} }
-if ('speechSynthesis' in window) { pickVoice(); try { speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {} }
-function say(text, pitch = 1) {
-  if (!settings.sound || !trVoice) return;
-  try {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = trVoice; u.lang = trVoice.lang; u.pitch = Math.min(2, pitch); u.rate = 1.15;
-    speechSynthesis.speak(u);
-  } catch (e) {}
 }
 
 function fireworks(times, gap) {
@@ -2212,7 +2199,6 @@ function tierDvd() {
           const hx = h.x + h.s / 2, hy = h.y + h.s / 2;
           burst(hx, hy, NEON, 70, { speed: 11, size: [4, 9], life: 70 });
           comboHit([hx, hy], 3, 'KÖŞE! +3');
-          say('Köşe!', 1.5);
         }
       }
       h.el.style.transform = `translate(${h.x.toFixed(1)}px, ${h.y.toFixed(1)}px)`;
@@ -2282,19 +2268,19 @@ function tierInfinite() {
   tone(60, 0.5, { type: 'sine', vol: 0.4, slide: 30 });
 }
 const TIERS = [
-  { at: 2, name: 'KOMBO!', color: '#FFC23D', say: 'Kombo!' },
-  { at: 3, name: 'SÜPER KOMBO!', color: '#2BD47D', say: 'Süper kombo!', on: tierSatellites },
-  { at: 4, name: 'TAŞ KAĞIT MAKAS SAVAŞI!', color: '#3A9BFF', say: 'Taş kağıt makas savaşı!', on: tierHandWar },
-  { at: 5, name: 'DİSKO MODU!', color: '#E24BD6', say: 'Disko modu!', on: tierDisco },
-  { at: 6, name: 'FORMÜL FIRTINASI!', color: '#7CF7FF', say: 'Formül fırtınası!', on: tierFormulas },
-  { at: 7, name: 'DVD MODU!', color: '#FF4D4D', say: 'DVD modu!', on: tierDvd },
-  { at: 8, name: 'DEAL WITH IT!', color: '#FFFFFF', say: 'Dil viz it!', on: tierGlassesRain },
-  { at: 9, name: 'SİSTEM AŞIRI YÜKLENDİ!', color: '#FF3B3B', say: 'Sistem aşırı yüklendi!', on: tierGlitch },
-  { at: 10, name: 'MEHMET HOCA SEVİYESİ!', color: '#FFD700', say: 'Mehmet Hoca seviyesi!', on: tierGold },
-  { at: 12, name: 'KONTROLDEN ÇIKTI!', color: '#FF8A00', say: 'Kontrolden çıktı!', on: tierChaos },
-  { at: 15, name: 'EVREN ÇAPINDA!', color: '#9D7CFF', say: 'Evren çapında!', on: tierCosmic },
-  { at: 20, name: 'EFSANELER EFSANESİ!', color: '#FF4DD2', say: 'Efsaneler efsanesi!', on: tierLegend },
-  { at: 30, name: 'SONSUZ KOMBO!', color: '#FFFFFF', say: 'Sonsuz kombo! Mehmet Hoca onayladı!', on: tierInfinite },
+  { at: 2, name: 'KOMBO!', color: '#FFC23D' },
+  { at: 3, name: 'SÜPER KOMBO!', color: '#2BD47D', on: tierSatellites },
+  { at: 4, name: 'TAŞ KAĞIT MAKAS SAVAŞI!', color: '#3A9BFF', on: tierHandWar },
+  { at: 5, name: 'DİSKO MODU!', color: '#E24BD6', on: tierDisco },
+  { at: 6, name: 'FORMÜL FIRTINASI!', color: '#7CF7FF', on: tierFormulas },
+  { at: 7, name: 'DVD MODU!', color: '#FF4D4D', on: tierDvd },
+  { at: 8, name: 'DEAL WITH IT!', color: '#FFFFFF', on: tierGlassesRain },
+  { at: 9, name: 'SİSTEM AŞIRI YÜKLENDİ!', color: '#FF3B3B', on: tierGlitch },
+  { at: 10, name: 'MEHMET HOCA SEVİYESİ!', color: '#FFD700', on: tierGold },
+  { at: 12, name: 'KONTROLDEN ÇIKTI!', color: '#FF8A00', on: tierChaos },
+  { at: 15, name: 'EVREN ÇAPINDA!', color: '#9D7CFF', on: tierCosmic },
+  { at: 20, name: 'EFSANELER EFSANESİ!', color: '#FF4DD2', on: tierLegend },
+  { at: 30, name: 'SONSUZ KOMBO!', color: '#FFFFFF', on: tierInfinite },
 ];
 const tierIndex = c => { let idx = -1; TIERS.forEach((t, i) => { if (c >= t.at) idx = i; }); return idx; };
 
@@ -2344,7 +2330,7 @@ function comboHit([x, y], n = 1, label = '') {
   const tIdx = tierIndex(combo);
   for (let i = showTier + 1; i <= tIdx; i++) { try { if (TIERS[i].on) TIERS[i].on(); } catch (err) {} }
   const t = TIERS[tIdx];
-  if (tIdx > showTier) { banner(t); say(t.say, 0.9 + tIdx * 0.08); showTier = tIdx; }
+  if (tIdx > showTier) { banner(t); showTier = tIdx; }
   const color = t ? t.color : GOLD;
 
   const hud = showEl.querySelector('.chud');
@@ -2359,7 +2345,7 @@ function comboHit([x, y], n = 1, label = '') {
   const rec = hud.querySelector('.crec');
   if (combo > showPrevBest && showPrevBest >= 3) {
     rec.textContent = 'YENİ REKOR!';
-    if (!recordAnnounced) { recordAnnounced = true; retrigger(rec, 'new'); later(() => say('Yeni rekor!', 1.3), 900); }
+    if (!recordAnnounced) { recordAnnounced = true; retrigger(rec, 'new'); }
   } else rec.textContent = `Rekor ×${comboBest}`;
   retrigger(hud.querySelector('.cbar i'), 'run');
 
@@ -2439,7 +2425,6 @@ function openShow() {
   document.body.appendChild(el);
   showEl = el;
   fanfare();
-  say('Mehmet Akbaş!');
   later(() => fireworks(14, 210), 700);
   showTimer = setTimeout(endShow, 4600);
 }
