@@ -372,6 +372,32 @@ td.num.k-ai{font-weight:500;font-size:14.5px}
 .cr b{font-family:var(--f-display);font-weight:500;font-size:16px;line-height:1.35}
 @media (max-width:700px){.credits{grid-template-columns:minmax(0,1fr)}}
 
+/* Danışman öğretmen: dans eden gökkuşağı harfler, taç, hale ve yıldızlar */
+.hype{position:relative;isolation:isolate;display:inline-flex;align-items:baseline;flex-wrap:nowrap;white-space:nowrap;cursor:pointer;
+  font-family:var(--f-display);font-weight:700;line-height:1.2;padding:2px 6px;-webkit-tap-highlight-color:transparent;outline:none}
+.cr .hype{font-size:clamp(20px,2.4vw,26px);align-self:flex-start;margin-top:.7em}
+.hype.sm{font-size:12.5px;margin-top:.5em;vertical-align:baseline}
+.hype:focus-visible{box-shadow:0 0 0 2px var(--ai);border-radius:8px}
+.hype .ch{display:inline-block;
+  background:linear-gradient(90deg,var(--you),#FFC23D,#2BD47D,var(--ai),#E24BD6,var(--you));background-size:500% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  animation:hypeWave 1.5s ease-in-out infinite,hypeFlow 3s linear infinite;
+  animation-delay:calc(var(--i) * 75ms),calc(var(--i) * -140ms)}
+.hype .sp{display:inline-block;width:.32em}
+@keyframes hypeWave{0%,100%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-.35em) rotate(-8deg) scale(1.22)}50%{transform:translateY(0) rotate(5deg) scale(1)}}
+@keyframes hypeFlow{to{background-position:500% 0}}
+.hype .halo{position:absolute;inset:-.45em -.7em;border-radius:999px;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,194,61,.55),rgba(226,75,214,.18) 60%,transparent);animation:halo 1.8s ease-in-out infinite}
+@keyframes halo{0%,100%{transform:scale(.92);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+.hype .crown{position:absolute;left:-.05em;top:-.85em;font-size:.75em;transform-origin:50% 100%;pointer-events:none;animation:crown 1.6s ease-in-out infinite}
+@keyframes crown{0%,100%{transform:rotate(-22deg) translateY(0)}50%{transform:rotate(-6deg) translateY(-.2em)}}
+.hype::before,.hype::after{content:"✨";position:absolute;font-size:.6em;pointer-events:none;animation:twinkle 1.3s ease-in-out infinite}
+.hype::before{right:-.9em;top:-.55em}
+.hype::after{right:-.4em;bottom:-.45em;animation-delay:.65s}
+@keyframes twinkle{0%,100%{transform:scale(.3) rotate(0);opacity:.15}50%{transform:scale(1.25) rotate(160deg);opacity:1}}
+.hype.boom .ch{animation:hypeBoom .7s cubic-bezier(.2,.9,.3,1.5),hypeFlow 3s linear infinite;animation-delay:calc(var(--i) * 30ms),calc(var(--i) * -140ms)}
+@keyframes hypeBoom{0%{transform:scale(1)}35%{transform:translateY(-.6em) scale(1.6) rotate(-14deg)}100%{transform:none}}
+
 /* ---------- Mobil ve dokunmatik ---------- */
 .bm,.start,.cta,.btn,.icon-btn,.seg button,.stepper button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .bm,.start,.cta{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -518,7 +544,7 @@ footer{font-size:12.5px;color:var(--muted);max-width:75ch}
         <input id="nameInput" name="player" maxlength="20" placeholder="Adını yaz" aria-label="Oyuncu adı" spellcheck="false">
         <p class="ov-sub" id="entrySub">20 tur, her turda 3 saniye. Süre dolarsa tur benim olur.</p>
         <button class="cta" type="submit">Başla<kbd>Enter</kbd></button>
-        <p class="ov-credit">TÜBİTAK 4006-A · Umut Dalga, Ruhi Emre Karaman · Danışman: Mehmet Akbaş</p>
+        <p class="ov-credit">TÜBİTAK 4006-A · Umut Dalga, Ruhi Emre Karaman · Danışman: <span class="hype sm" data-hype>Mehmet Akbaş</span></p>
       </form>
       <div class="ov-card" id="summary" hidden>
         <p class="eyebrow" id="sumName">Oyuncu</p>
@@ -615,7 +641,7 @@ footer{font-size:12.5px;color:var(--muted);max-width:75ch}
   <section class="credits" aria-label="Proje künyesi">
     <div class="cr"><span class="lbl">Proje</span><b>TÜBİTAK 4006-A Bilim Fuarı</b></div>
     <div class="cr"><span class="lbl">Hazırlayan öğrenciler</span><b>Umut Dalga</b><b>Ruhi Emre Karaman</b></div>
-    <div class="cr"><span class="lbl">Danışman öğretmen</span><b>Mehmet Akbaş</b></div>
+    <div class="cr"><span class="lbl">Danışman öğretmen</span><b class="hype" data-hype>Mehmet Akbaş</b></div>
   </section>
 
   <footer>Gerçekten rastgele oynayan bir rakibe karşı hiçbir strateji uzun vadede %33'ün üstüne çıkamaz; laboratuvardaki son satır bunu gösteriyor. İnsanlar ise rastgele oynayamaz: tekrar eder, kaybedince değiştirir, döngüye girer. Bu yapay zekâ o alışkanlıkları bulur ve onlara karşı oynar. Hafızası oyuncular arasında ortak: her yeni oyuncu, öncekilerden öğrendiklerimle karşılaşır.</footer>
@@ -1655,8 +1681,43 @@ try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw
 new MutationObserver(drawChart).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawChart);
 
+// ---------- Danışman öğretmen efekti ----------
+function hypeBurst(el, big) {
+  const [x, y] = center(el);
+  burst(x, y, [cssVar('--you'), GOLD, '#2BD47D', cssVar('--ai'), '#E24BD6'], big ? 70 : 26,
+    { speed: big ? 9 : 5, size: big ? [5, 10] : [3, 6], gravity: 0.16, life: big ? 75 : 50 });
+}
+function hypeInit() {
+  const visible = new Set();
+  const io = 'IntersectionObserver' in window
+    ? new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)))
+    : null;
+  document.querySelectorAll('[data-hype]').forEach(el => {
+    const text = el.textContent.trim();
+    el.setAttribute('aria-label', text); el.setAttribute('role', 'button'); el.tabIndex = 0;
+    el.innerHTML = '<span class="halo" aria-hidden="true"></span><span class="crown" aria-hidden="true">👑</span>' +
+      [...text].map((c, i) => c === ' ' ? '<span class="sp" aria-hidden="true"></span>' : `<span class="ch" style="--i:${i}" aria-hidden="true">${esc(c)}</span>`).join('');
+    const go = e => {
+      e.stopPropagation();
+      ensureAudio();
+      [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.16, { type: 'triangle', vol: 0.1, at: i * 0.07 }));
+      retrigger(el, 'boom');
+      hypeBurst(el, true);
+    };
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(e); } });
+    if (io) io.observe(el);
+  });
+  // Görünürken birkaç saniyede bir kendiliğinden konfeti (oyun turu sürerken değil)
+  setInterval(() => {
+    if (document.hidden || phase === 'turn' || phase === 'reveal') return;
+    visible.forEach(el => { if (el.offsetParent !== null) hypeBurst(el, !el.classList.contains('sm')); });
+  }, 4200);
+}
+
 // ---------- Başlat ----------
 fxInit();
+hypeInit();
 load();
 newRound();
 renderAll(false);
